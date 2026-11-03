@@ -135,6 +135,30 @@ Para realizar las pruebas se configuraron tres modos en `application.properties`
 No se realizan cobros bancarios reales.
 
 
+## Prueba de la Dead-Letter Queue
+
+Para comprobar el manejo de errores, se realizó una prueba en la que todos los intentos de pago fallan.
+
+Primero se ejecutó Spring Boot con el modo `failure`:
+
+    $env:BIKESTORE_PAYMENT_MODE = "failure"
+    .\mvnw.cmd spring-boot:run
+
+Después se envió un pedido mediante `POST /orders`.
+
+PaymentWorker realizó el intento inicial y tres reintentos adicionales. Como ninguno fue exitoso, rechazó el mensaje sin devolverlo a la cola original.
+
+RabbitMQ utilizó el Dead-Letter Exchange para moverlo a `bikestore.dlq`.
+
+Durante esta prueba se verificó que:
+
+- El pedido dejó de estar pendiente en la cola de pagos.
+- El mensaje apareció en la Dead-Letter Queue.
+- No se generó una confirmación de pago para ese pedido.
+- Los registros mostraron el identificador, la fecha, el hilo y cada intento.
+
+Las capturas se encuentran en `docs/evidencias`.
+
 ## Estado del desarrollo
 
 - [x] Configuración inicial de RabbitMQ con Docker.
@@ -142,7 +166,7 @@ No se realizan cobros bancarios reales.
 - [x] Conexión de Spring Boot con RabbitMQ.
 - [x] Publicación de pedidos mediante OrderProducer.
 - [x] Procesamiento de pagos con PaymentWorker.
-- [ ] Implementación de reintentos y Dead-Letter Queue.
+- [x] Implementación de reintentos y Dead-Letter Queue.
 - [ ] Confirmación de pagos con EmailWorker.
 - [ ] Pruebas y evidencias del funcionamiento.
 
