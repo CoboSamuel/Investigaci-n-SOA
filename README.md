@@ -95,7 +95,7 @@ Para detener RabbitMQ:
 
 - [x] Configuración inicial de RabbitMQ con Docker.
 - [x] Creación y ejecución inicial del proyecto Spring Boot.
-- [ ] Conexión de Spring Boot con RabbitMQ.
+- [x] Conexión de Spring Boot con RabbitMQ.
 - [ ] Publicación de pedidos mediante OrderProducer.
 - [ ] Procesamiento de pagos con PaymentWorker.
 - [ ] Implementación de reintentos y Dead-Letter Queue.
