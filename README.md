@@ -192,6 +192,53 @@ de recepción de pedidos, pagos y notificaciones.
 
 Las evidencias están disponibles en `docs/evidencias`.
 
+## Pruebas finales
+
+Se realizaron pruebas para comprobar el funcionamiento
+de BikeStore Async v1.0.
+
+### Pago exitoso
+
+OrderProducer publicó el pedido en RabbitMQ.
+PaymentWorker procesó el pago y publicó el evento PAID.
+EmailWorker recibió el evento y registró la confirmación
+simulada.
+
+### Pago fallido
+
+Se utilizó el modo `failure` para provocar fallos.
+PaymentWorker realizó un intento inicial y tres
+reintentos adicionales.
+
+Al agotarse los intentos, el mensaje fue rechazado
+y enviado a `bikestore.dlq`.
+
+### Pedido sin pago aprobado
+
+Se publicó un mensaje con estado PENDING en la cola
+de confirmaciones.
+
+EmailWorker lo recibió y registró el evento
+`EMAIL_SKIPPED_NOT_PAID`, por lo que no se simuló
+el envío del correo.
+
+### Compilación
+
+Se ejecutó el siguiente comando:
+
+    .\mvnw.cmd clean verify
+
+Maven terminó con `BUILD SUCCESS` y generó
+el archivo JAR ejecutable en la carpeta `target`.
+
+### Registro de eventos
+
+Los registros incluyen `pedidoId`, `timestamp`
+y `thread`, lo que permite identificar el recorrido
+de cada pedido entre los componentes.
+
+Las capturas se encuentran en `docs/evidencias`.
+
 ## Estado del desarrollo
 
 - [x] Configuración inicial de RabbitMQ con Docker.
@@ -201,7 +248,7 @@ Las evidencias están disponibles en `docs/evidencias`.
 - [x] Procesamiento de pagos con PaymentWorker.
 - [x] Implementación de reintentos y Dead-Letter Queue.
 - [x] Confirmación de pagos con EmailWorker.
-- [ ] Pruebas y evidencias del funcionamiento.
+- [x] Pruebas y evidencias del funcionamiento.
 
 ## Documentación
 
