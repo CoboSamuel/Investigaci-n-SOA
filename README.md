@@ -159,6 +159,39 @@ Durante esta prueba se verificó que:
 
 Las capturas se encuentran en `docs/evidencias`.
 
+## Confirmación de pedidos con EmailWorker
+
+Para completar el procesamiento asíncrono se implementó
+EmailWorker, un consumidor independiente que escucha
+los mensajes publicados en `bikestore.email.queue`.
+
+Cuando PaymentWorker aprueba un pago, publica un evento
+con el estado `PAID`. EmailWorker recibe ese mensaje,
+comprueba el estado y simula el envío de una confirmación.
+
+Si el estado es diferente de `PAID`, no se envía ninguna
+confirmación.
+
+La simulación registra en consola el identificador del
+pedido, el timestamp, el thread y el correo del cliente.
+
+### Prueba realizada
+
+Se envió un pedido mediante `POST /orders` utilizando
+el modo de pago `success`.
+
+Se verificó el siguiente flujo:
+
+1. OrderProducer publicó el pedido en RabbitMQ.
+2. PaymentWorker aprobó el pago.
+3. EmailWorker recibió el evento de pago exitoso.
+4. Se registró la confirmación simulada del pedido.
+
+La implementación mantiene separados los procesos
+de recepción de pedidos, pagos y notificaciones.
+
+Las evidencias están disponibles en `docs/evidencias`.
+
 ## Estado del desarrollo
 
 - [x] Configuración inicial de RabbitMQ con Docker.
@@ -167,7 +200,7 @@ Las capturas se encuentran en `docs/evidencias`.
 - [x] Publicación de pedidos mediante OrderProducer.
 - [x] Procesamiento de pagos con PaymentWorker.
 - [x] Implementación de reintentos y Dead-Letter Queue.
-- [ ] Confirmación de pagos con EmailWorker.
+- [x] Confirmación de pagos con EmailWorker.
 - [ ] Pruebas y evidencias del funcionamiento.
 
 ## Documentación
