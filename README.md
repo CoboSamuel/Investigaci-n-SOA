@@ -91,12 +91,36 @@ Para detener RabbitMQ:
 
     docker compose down
 
+
+### Publicación de pedidos
+
+El sistema cuenta con un endpoint `POST /orders` que permite registrar la compra de una bicicleta.
+
+Cuando se recibe una solicitud, `OrderController` valida los datos y utiliza `OrderProducer` para generar un identificador y publicar el pedido en RabbitMQ en formato JSON.
+
+El mensaje se envía a `bikestore.payments.queue` con el estado inicial `PENDING`, para que posteriormente sea procesado por `PaymentWorker`.
+
+**Ejemplo de petición:**
+
+```json
+{
+  "cliente": "Samuel",
+  "correo": "samuel@example.com",
+  "producto": "Bicicleta Trek Marlin",
+  "precio": 850.00
+}
+```
+
+**Endpoint:** `POST http://localhost:8080/orders`
+
+La API responde con el identificador del pedido y el estado `PENDING`. El pago todavía no se ejecuta en esta etapa.
+
 ## Estado del desarrollo
 
 - [x] Configuración inicial de RabbitMQ con Docker.
 - [x] Creación y ejecución inicial del proyecto Spring Boot.
 - [x] Conexión de Spring Boot con RabbitMQ.
-- [ ] Publicación de pedidos mediante OrderProducer.
+- [x] Publicación de pedidos mediante OrderProducer.
 - [ ] Procesamiento de pagos con PaymentWorker.
 - [ ] Implementación de reintentos y Dead-Letter Queue.
 - [ ] Confirmación de pagos con EmailWorker.
