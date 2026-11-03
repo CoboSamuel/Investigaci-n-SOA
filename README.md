@@ -115,13 +115,33 @@ El mensaje se envía a `bikestore.payments.queue` con el estado inicial `PENDING
 
 La API responde con el identificador del pedido y el estado `PENDING`. El pago todavía no se ejecuta en esta etapa.
 
+
+## Procesamiento de pagos
+
+El procesamiento de pagos se realiza mediante `PaymentWorker`, que consume los pedidos almacenados en RabbitMQ.
+
+Cada intento de pago tiene un 50 % de probabilidad de fallar. Si esto ocurre, el sistema realiza hasta tres reintentos adicionales.
+
+Cuando un pago se aprueba, `PaymentWorker` publica un nuevo mensaje JSON con el estado `PAID` en `bikestore.email.queue`.
+
+Si se agotan los reintentos, el mensaje se rechaza para enviarlo a la Dead-Letter Queue, donde podrá revisarse posteriormente.
+
+Para realizar las pruebas se configuraron tres modos en `application.properties`:
+
+- `random`: simula pagos con 50 % de probabilidad de fallo.
+- `success`: todos los pagos son exitosos.
+- `failure`: todos los intentos de pago fallan.
+
+No se realizan cobros bancarios reales.
+
+
 ## Estado del desarrollo
 
 - [x] Configuración inicial de RabbitMQ con Docker.
 - [x] Creación y ejecución inicial del proyecto Spring Boot.
 - [x] Conexión de Spring Boot con RabbitMQ.
 - [x] Publicación de pedidos mediante OrderProducer.
-- [ ] Procesamiento de pagos con PaymentWorker.
+- [x] Procesamiento de pagos con PaymentWorker.
 - [ ] Implementación de reintentos y Dead-Letter Queue.
 - [ ] Confirmación de pagos con EmailWorker.
 - [ ] Pruebas y evidencias del funcionamiento.
