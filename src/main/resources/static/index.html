@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BikeStore Async | Bicicletas de alto rendimiento</title>
+  <meta name="description" content="Tienda de bicicletas BikeStore Async v1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<header class="navbar" id="navbar">
+  <div class="container nav-inner">
+    <a href="#inicio" class="logo">Bike<span>Store</span></a>
+    <button class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="nav-links" id="navLinks">
+      <a href="#inicio">Inicio</a>
+      <a href="#bicicletas">Bicicletas</a>
+      <a href="#comprar" class="btn btn-small">Comprar</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero" id="inicio">
+    <div class="container hero-content">
+      <span class="eyebrow">Nueva colección 2026</span>
+      <h1>Rueda más lejos.<br><em>Siente cada ruta.</em></h1>
+      <p>Bicicletas de montaña y ruta seleccionadas para quienes no se conforman con llegar: quieren disfrutar el camino.</p>
+      <a href="#bicicletas" class="btn">Explorar catálogo</a>
+      <div class="hero-stats">
+        <div><strong>4</strong><span>Modelos</span></div>
+        <div><strong>50%</strong><span>Fallo simulado</span></div>
+        <div><strong>3</strong><span>Reintentos</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section container" id="bicicletas">
+    <div class="section-head reveal">
+      <span class="eyebrow dark">Catálogo</span>
+      <h2>Elige tu próxima bicicleta</h2>
+      <p>Cuatro modelos pensados para distintos terrenos y estilos de ruta.</p>
+    </div>
+    <div class="grid" id="catalogo"></div>
+  </section>
+
+  <section class="order-section" id="comprar">
+    <div class="container order-wrap">
+      <div class="order-intro reveal">
+        <span class="eyebrow">Compra</span>
+        <h2>Realiza tu pedido</h2>
+        <p>Completa tus datos y enviaremos tu pedido a procesamiento. El pago es simulado: no necesitas ingresar datos bancarios.</p>
+        <ul class="steps">
+          <li><b>1</b> Envías tu pedido</li>
+          <li><b>2</b> Queda en estado <code>PENDING</code></li>
+          <li><b>3</b> Un worker lo procesa de forma asíncrona</li>
+        </ul>
+      </div>
+
+      <div class="order-card reveal">
+        <form id="orderForm" novalidate>
+          <label>Nombre completo
+            <input type="text" id="cliente" name="cliente" placeholder="Samuel" required minlength="2">
+          </label>
+          <label>Correo electrónico
+            <input type="email" id="correo" name="correo" placeholder="samuel@example.com" required>
+          </label>
+          <label>Bicicleta seleccionada
+            <select id="producto" name="producto" required></select>
+          </label>
+          <label>Precio (USD)
+            <input type="text" id="precio" readonly>
+          </label>
+          <p class="form-error" id="formError" role="alert" hidden></p>
+          <button type="submit" class="btn btn-block" id="submitBtn">Confirmar compra</button>
+        </form>
+
+        <div class="confirmation" id="confirmation" hidden aria-live="polite">
+          <div class="check">✓</div>
+          <h3>¡Pedido recibido!</h3>
+          <p id="confMensaje"></p>
+          <dl>
+            <div><dt>ID del pedido</dt><dd id="confId"></dd></div>
+            <div><dt>Estado</dt><dd><span class="badge" id="confStatus"></span></dd></div>
+          </dl>
+          <p class="note">Tu pedido está siendo procesado de forma asíncrona. El estado final lo define el servicio de pagos.</p>
+          <button type="button" class="btn btn-outline" id="newOrder">Hacer otro pedido</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="container footer-inner">
+    <div>
+      <a href="#inicio" class="logo">Bike<span>Store</span></a>
+      <p>BikeStore Async v1.0 — tienda de bicicletas de demostración.</p>
+    </div>
+    <div>
+      <h4>Proyecto</h4>
+      <p>Diseño y Arquitectura de Software<br>Java 21 · Spring Boot · RabbitMQ</p>
+    </div>
+    <div>
+      <h4>Navegación</h4>
+      <p><a href="#inicio">Inicio</a> · <a href="#bicicletas">Bicicletas</a> · <a href="#comprar">Comprar</a></p>
+    </div>
+  </div>
+  <div class="container copy">© 2026 BikeStore Async. Proyecto universitario.</div>
+</footer>
+
+<script src="js/app.js"></script>
+</body>
+</html>
